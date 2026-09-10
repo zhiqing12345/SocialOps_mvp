@@ -1,4 +1,4 @@
-export type Page='home'|'insights'|'create'|'records'|'analytics'|'knowledge'|'cases';
+export type Page='home'|'insights'|'create'|'records'|'analytics'|'knowledge';
 export type Platform='微信公众号'|'微博'|'小红书'|'抖音';
 export const platforms:Platform[]=['微信公众号','微博','小红书','抖音'];
 export type HotTrend='爆'|'上升'|'新'|'平稳';

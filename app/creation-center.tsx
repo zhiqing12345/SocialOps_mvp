@@ -5,25 +5,22 @@ import { BookOpen, Check, Clapperboard, FileText, Image, LayoutTemplate, PenLine
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Creator, notify } from './workspace';
 
-export type CreationMode = 'poster' | 'video' | 'copy';
-type Props = ComponentProps<typeof Creator> & { mode: CreationMode; onModeChange: (mode: CreationMode) => void };
-const modes = [{ id: 'poster', label: '海报创作' }, { id: 'video', label: '视频混剪' }, { id: 'copy', label: '文案生成' }] as const;
+export type CreationMode = 'copy' | 'poster' | 'video';
+export const creationModes = [{ id: 'copy', label: '内容总编', icon: PenLine }, { id: 'poster', label: '海报创作', icon: Image }, { id: 'video', label: '剪辑大师', icon: Clapperboard }] as const;
+type Props = ComponentProps<typeof Creator> & { mode: CreationMode };
 
-export function CreationCenter({ mode, onModeChange, ...props }: Props) {
- return <Tabs value={mode} onValueChange={v => onModeChange(v as CreationMode)} className="creation-center section-tabs">
-  <TabsList variant="line" className="section-tabs-nav" aria-label="内容创作类型">
-   {modes.map(item => <TabsTrigger key={item.id} value={item.id}>{item.label}</TabsTrigger>)}
-  </TabsList>
-  <TabsContent value="poster" keepMounted><MediaWorkspace kind="poster" brand={props.model.brand.name} knowledgeCount={props.model.knowledge.length}/></TabsContent>
-  <TabsContent value="video" keepMounted><MediaWorkspace kind="video" brand={props.model.brand.name} knowledgeCount={props.model.knowledge.length}/></TabsContent>
-  <TabsContent value="copy" keepMounted><Creator {...props}/></TabsContent>
- </Tabs>;
+export function CreationCenter({ mode, ...props }: Props) {
+ return <div className="creation-center">
+
+  <div hidden={mode !== 'copy'}><Creator {...props}/></div>
+  <div hidden={mode !== 'poster'}><MediaWorkspace kind="poster" brand={props.model.brand.name} knowledgeCount={props.model.knowledge.length}/></div>
+  <div hidden={mode !== 'video'}><MediaWorkspace kind="video" brand={props.model.brand.name} knowledgeCount={props.model.knowledge.length}/></div>
+ </div>;
 }
-
 type Brief = { title: string; purpose: string; ratio: string; requirements: string };
 function MediaWorkspace({ kind, brand, knowledgeCount }: { kind: 'poster' | 'video'; brand: string; knowledgeCount: number }) {
  const isPoster = kind === 'poster';
